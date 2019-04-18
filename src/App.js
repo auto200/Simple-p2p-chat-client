@@ -143,10 +143,10 @@ const App = () => {
         console.log("other user provided invalid data");
       }
     });
-    // pipe.on(events.PIPE_ERROR, err => {
-    //   // note that this fires every time before PIPE_CLOSE
-    //   console.dir(err);
-    // });
+    pipe.on(events.PIPE_ERROR, err => {
+      // note that this fires every time before PIPE_CLOSE
+      console.dir(err);
+    });
     pipe.on(events.PIPE_CLOSE, () => {
       console.log("-------------disconnect message============");
       const [otherUserInfo] = stateRef.current.usersInfo.filter(
