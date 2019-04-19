@@ -2,9 +2,9 @@ import React from "react";
 import styled from "styled-components";
 
 const Icon = styled.div`
-  position: absolute;
-  right: 1rem;
-  top: 0.55rem;
+  margin-left: auto;
+  margin-right: 1rem;
+  margin-top: 0.55rem;
   color: #e8e7e3;
 `;
 

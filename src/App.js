@@ -4,8 +4,7 @@ import React, { useEffect, useRef, useContext } from "react";
 import SimplePeer from "simple-peer";
 import io from "socket.io-client";
 import "./style.css";
-import Logo from "./components/Logo";
-import Hamburger from "./components/Hamburger";
+import Header from "./containers/Header";
 import GetUserName from "./components/GetUserName";
 import ChatBox from "./containers/ChatBox";
 import BottomRow from "./containers/BottomRow";
@@ -42,7 +41,7 @@ const App = () => {
 
   useEffect(() => {
     stateRef.current = state;
-  });
+  }, [state]);
 
   // useEffect(() => {
   //   console.log("state changed", state.usersInfo);
@@ -186,8 +185,7 @@ const App = () => {
 
   return (
     <div id="container">
-      <Logo />
-      <Hamburger />
+      <Header />
       {state.userName ? <ChatBox /> : <GetUserName />}
       {state.userName && (
         <BottomRow
