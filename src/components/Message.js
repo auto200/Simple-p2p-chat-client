@@ -1,8 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import messageTypes from "../messageTypes";
-//https://soapbox.github.io/linkifyjs/
-import Linkify from "linkifyjs/react";
+import Linkify from "linkifyjs/react"; //https://soapbox.github.io/linkifyjs/
 
 const Message = React.memo(props => {
   const message = props.messageObject;
@@ -36,8 +35,6 @@ const Message = React.memo(props => {
     margin-bottom: 0.5em;
     font-size: 0.8em;
     color: #e8e6e3;
-    background-color: #302d26;
-    border-radius: 0.6em;
     padding: 0.4em;
   `;
   const linkOptions = {
