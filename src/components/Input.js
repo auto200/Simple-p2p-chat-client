@@ -1,8 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 
 const TextArea = styled.textarea`
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-family: "Gill Sans", "Gill Sans MT", "Calibri", "Trebuchet MS",
+    "sans-serif";
   flex: 1;
   height: 4rem;
   font-size: 1.3em;
@@ -14,10 +15,10 @@ const TextArea = styled.textarea`
   background: #252a33;
 `;
 
-const Input = props => {
+const Input = React.forwardRef((props, ref) => {
   const handleChange = e => {
     if (e.keyCode === 13 && e.shiftKey === false) e.preventDefault();
-    else props.setInput(e.target.value);
+    else props.setUserInput(e.target.value);
   };
 
   const handleSubmit = e => {
@@ -27,21 +28,16 @@ const Input = props => {
     }
   };
 
-  const inputRef = React.createRef();
-  useEffect(() => {
-    inputRef.current.focus();
-  });
-
   return (
     <TextArea
-      id="input-field"
-      ref={inputRef}
-      value={props.input}
+      ref={ref}
+      value={props.userInput}
       onKeyDown={handleSubmit}
       onChange={handleChange}
       placeholder="type here ......................"
+      autoFocus
     />
   );
-};
+});
 
 export default Input;
