@@ -5,6 +5,7 @@ import AloneInTheChat from "../components/AloneInTheChat";
 import styled from "styled-components";
 import throttle from "lodash.throttle";
 import { StoreContext } from "../Store";
+import messageTypes from "../messageTypes";
 
 const Container = styled.div`
   position: relative;
@@ -29,9 +30,17 @@ const ChatBox = () => {
   const chatBoxRef = useRef();
 
   useEffect(() => {
-    const chatRef = chatBoxRef.current;
-    const formula = chatRef.scrollTop + chatRef.clientHeight;
-    if (formula + 100 > chatRef.scrollHeight) scrollToBottom();
+    if (!state.messages.length) return;
+    if (
+      state.messages[state.messages.length - 1].origin ===
+      messageTypes.MY_MESSAGE
+    )
+      scrollToBottom();
+    else {
+      const chatRef = chatBoxRef.current;
+      const formula = chatRef.scrollTop + chatRef.clientHeight;
+      if (formula + 100 > chatRef.scrollHeight) scrollToBottom();
+    }
   }, [state.messages]);
 
   function scrollToBottom() {
@@ -42,7 +51,7 @@ const ChatBox = () => {
   useEffect(() => {
     chatBoxRef.current.addEventListener(
       "scroll",
-      throttle(checkIfShowScrollToBottomButton, 500)
+      throttle(checkIfShowScrollToBottomButton, 300)
     );
 
     return () =>
