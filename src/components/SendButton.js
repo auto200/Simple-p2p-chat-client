@@ -18,7 +18,7 @@ const Container = styled.div`
 
 const SendButton = props => {
   return (
-    <Container onClick={props.broadcast}>
+    <Container onClick={props.onClick}>
       <svg
         aria-hidden="true"
         focusable="false"
