@@ -5,7 +5,7 @@ import {
   ADD_USERS_INFO,
   DELETE_USERS_INFO,
   ADD_MESSAGE,
-  SET_IS_ALONE_IN_THE_CHAT
+  ALONE_IN_THE_CHAT
 } from "./ActionTypes";
 
 export const StoreContext = createContext({});
@@ -34,7 +34,7 @@ function reducer(state, action) {
       return { ...state, usersInfo: newInfo };
     case ADD_MESSAGE:
       return { ...state, messages: [...state.messages, action.payload] };
-    case SET_IS_ALONE_IN_THE_CHAT:
+    case ALONE_IN_THE_CHAT:
       return { ...state, isAloneInTheChat: action.payload };
     default:
       throw new Error("you need to provide valid action type");
