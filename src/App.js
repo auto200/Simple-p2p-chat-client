@@ -18,7 +18,7 @@ import {
   ADD_USERS_INFO,
   DELETE_USERS_INFO,
   ADD_MESSAGE,
-  SET_IS_ALONE_IN_THE_CHAT
+  ALONE_IN_THE_CHAT
 } from "./ActionTypes";
 
 const App = () => {
@@ -43,22 +43,20 @@ const App = () => {
     stateRef.current = state;
   }, [state]);
 
-  // useEffect(() => {
-  //   console.log("state changed", state.usersInfo);
-  // }, [state.usersInfo]);
-
   useEffect(() => {
     if (!state.usersInfo) return;
-    if (state.usersInfo.length > 0 || connections.current.length > 0)
-      dispatch({ type: SET_IS_ALONE_IN_THE_CHAT, payload: false });
-    else dispatch({ type: SET_IS_ALONE_IN_THE_CHAT, payload: true });
+    if (state.usersInfo.length > 0)
+      dispatch({ type: ALONE_IN_THE_CHAT, payload: false });
+    else dispatch({ type: ALONE_IN_THE_CHAT, payload: true });
   }, [state.usersInfo]);
 
+  //TODO: figure out better way to do it
   useEffect(() => {
     if (state.userName) {
       dispatch({
         type: SET_SOCKET,
         //you can just use "localhost:PORT" but you won't be able to connect from other devices
+        // payload: io("192.168.0.103:3000")
         payload: io("https://simple-chat-signaling-server.herokuapp.com/")
       });
     }
@@ -67,6 +65,7 @@ const App = () => {
   useEffect(() => {
     if (state.socket) {
       console.log("setting up socket listeners");
+
       state.socket.on(events.SOCKET_CREATED, () => {
         console.log("waiting for more users");
       });
@@ -78,7 +77,6 @@ const App = () => {
           });
           //note that "connections.current[pipeId]" is an object so it's passed by reference,
           //it mutates and doesn't need to be returned from setUpPipeListeners()
-
           setUpPipeListeners(connections.current[pipeId], pipeId);
         }
       });
@@ -103,12 +101,10 @@ const App = () => {
     pipe.on(events.PIPE_CONNECT, () => {
       console.log("connected");
       //send welcome message
-      const joinMessage = JSON.stringify(
-        createSpecialMessage(
-          messageTypes.JOIN_MESSAGE,
-          state.userName,
-          state.socket.id
-        )
+      const joinMessage = createSpecialMessage(
+        messageTypes.JOIN_MESSAGE,
+        state.userName,
+        state.socket.id
       );
       sendMessageTo(pipe, joinMessage);
     });
@@ -118,8 +114,10 @@ const App = () => {
         newMessage.origin = messageTypes.FOREIGN_MESSAGE;
         // console.log(newMessage);
 
-        if (!newMessage.type) throw new Error("invalid or corrupted data");
-
+        if (!newMessage.type)
+          throw new Error(
+            "invalid or corrupted data, message type not specified"
+          );
         //save info about new connected user
         if (newMessage.type === messageTypes.JOIN_MESSAGE) {
           dispatch({
@@ -164,7 +162,8 @@ const App = () => {
     });
   }
   function sendMessageTo(pipe, messageObject) {
-    if (pipe.connected) pipe.send(messageObject);
+    const stringifiedObject = JSON.stringify(messageObject);
+    if (pipe.connected) pipe.send(stringifiedObject);
   }
   function broadcastMessage(messageObject) {
     const objectString = JSON.stringify(messageObject);
