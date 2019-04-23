@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import styled from "styled-components";
 import { StoreContext } from "../Store";
 import { SET_USER_NAME } from "../ActionTypes";
@@ -38,28 +38,20 @@ const GetUserName = () => {
 
   const handleChange = e => {
     if (userName.length < 25) setUserName(e.target.value);
+    //TODO: add label or something with warning, probably when implementing material ui
     else console.log("error name too long");
   };
   const handleSubmit = e => {
     e.preventDefault();
-    dispatch({ type: SET_USER_NAME, payload: userName });
+    const trimmedName = userName.replace(/ +(?= )/g, "").trim();
+    dispatch({ type: SET_USER_NAME, payload: trimmedName });
   };
-
-  const inputRef = React.createRef();
-  useEffect(() => {
-    inputRef.current.focus();
-  }, []);
 
   return (
     <LoginForm onSubmit={handleSubmit}>
       <label>
         <div>Your name:</div>
-        <Input
-          type="text"
-          value={userName}
-          onChange={handleChange}
-          ref={inputRef}
-        />
+        <Input type="text" value={userName} onChange={handleChange} autoFocus />
       </label>
       <Button>Login</Button>
     </LoginForm>
