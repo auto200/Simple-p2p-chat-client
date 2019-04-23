@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Input from "../components/Input";
 import SendButton from "../components/SendButton";
 import styled from "styled-components";
@@ -9,17 +9,24 @@ const Container = styled.div`
 `;
 
 const BottomRow = props => {
-  const [input, setInput] = useState("");
+  const [userInput, setUserInput] = useState("");
+  const inputFieldRef = useRef();
 
   const broadcast = () => {
-    const text = input.trim();
+    const text = userInput.trim();
     if (text) props.createAndBroadcastTextMessage(text);
-    setInput("");
+    setUserInput("");
+    inputFieldRef.current.focus();
   };
   return (
     <Container>
-      <Input broadcast={broadcast} input={input} setInput={setInput} />
-      <SendButton broadcast={broadcast} />
+      <Input
+        ref={inputFieldRef}
+        broadcast={broadcast}
+        userInput={userInput}
+        setUserInput={setUserInput}
+      />
+      <SendButton onClick={broadcast} />
     </Container>
   );
 };
